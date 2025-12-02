@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ikon News Scraper</title>
+    <title>Ikon News Scraper - Portfolio Project</title>
     <style>
         * {
             margin: 0;
@@ -12,135 +12,329 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #f5f7fa;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
         }
 
         .container {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            max-width: 1000px;
             width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
             padding: 40px;
+            text-align: center;
         }
 
         h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 2em;
+            font-size: 2.5em;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
         }
 
         .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1em;
+            font-size: 1.1em;
+            opacity: 0.95;
+            font-weight: 300;
         }
 
-        .button-container {
-            margin-bottom: 30px;
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #3498db;
+            border-radius: 2px;
+        }
+
+        .category-selection {
+            background: #f8f9fa;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .category-item {
+            background: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .category-item:hover {
+            border-color: #3498db;
+            background: #f0f8ff;
+        }
+
+        .category-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #3498db;
+        }
+
+        .category-item label {
+            cursor: pointer;
+            color: #495057;
+            font-size: 0.95em;
+            flex: 1;
+        }
+
+        .select-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .select-controls button {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            background: white;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+            font-weight: 500;
+        }
+
+        .select-controls button:hover {
+            background: #f8f9fa;
+            border-color: #adb5bd;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            gap: 8px;
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-badge.idle {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .status-badge.idle::before {
+            background: #6c757d;
+        }
+
+        .status-badge.running {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.running::before {
+            background: #ffc107;
+        }
+
+        .status-badge.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.completed::before {
+            background: #28a745;
+        }
+
+        .status-badge.stopped {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-badge.stopped::before {
+            background: #dc3545;
         }
 
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 12px 32px;
+            font-size: 1em;
+            border-radius: 6px;
             border: none;
-            padding: 15px 40px;
-            font-size: 1.1em;
-            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: 600;
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #2980b9;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            display: none;
+        }
+
+        .btn-danger.show {
+            display: inline-block;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #c82333;
         }
 
         button:disabled {
-            background: #ccc;
+            opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
 
         .output-container {
             background: #1e1e1e;
             border-radius: 8px;
             padding: 20px;
-            height: 400px;
+            height: 420px;
             overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: #00ff00;
-            margin-bottom: 20px;
-            border: 2px solid #333;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #a9b7c6;
+            border: 1px solid #e9ecef;
+        }
+
+        .output-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .output-container::-webkit-scrollbar-track {
+            background: #2b2b2b;
+            border-radius: 4px;
+        }
+
+        .output-container::-webkit-scrollbar-thumb {
+            background: #4a4a4a;
+            border-radius: 4px;
+        }
+
+        .output-container::-webkit-scrollbar-thumb:hover {
+            background: #5a5a5a;
         }
 
         .output-line {
-            margin-bottom: 5px;
-            line-height: 1.5;
+            margin-bottom: 4px;
         }
 
         .download-section {
             display: none;
-            background: #f0f8ff;
-            padding: 20px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            padding: 24px;
             border-radius: 8px;
-            border: 2px solid #667eea;
+            text-align: center;
+            margin-top: 24px;
         }
 
         .download-section.show {
             display: block;
         }
 
-        .download-btn {
-            background: #28a745;
-            margin-top: 10px;
-        }
-
-        .download-btn:hover {
-            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
-        }
-
-        .status {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
+        .download-section h3 {
+            color: #2e7d32;
+            margin-bottom: 8px;
             font-weight: 600;
-            margin-bottom: 20px;
         }
 
-        .status.idle {
-            background: #e0e0e0;
-            color: #666;
+        .download-section p {
+            color: #1b5e20;
+            margin-bottom: 16px;
         }
 
-        .status.running {
-            background: #fff3cd;
-            color: #856404;
+        .btn-success {
+            background: #28a745;
+            color: white;
+            padding: 14px 40px;
+            font-size: 1.05em;
         }
 
-        .status.completed {
-            background: #d4edda;
-            color: #155724;
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover {
+            color: #2980b9;
         }
 
         .spinner {
             display: none;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-top-color: white;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
+            animation: spin 0.8s linear infinite;
+            margin-left: 8px;
             vertical-align: middle;
         }
 
@@ -152,140 +346,80 @@
             to { transform: rotate(360deg); }
         }
 
-        .info-box {
-            background: #e7f3ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #667eea;
-        }
+        @media (max-width: 768px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
 
-        .info-box p {
-            color: #333;
-            line-height: 1.6;
-        }
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
 
-        .category-selection {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-        }
-
-        .category-selection h3 {
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 1.1em;
-        }
-
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-        }
-
-        .category-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .category-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .category-item label {
-            cursor: pointer;
-            color: #333;
-            font-size: 0.95em;
-        }
-
-        .select-controls {
-            margin-top: 15px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .select-controls button {
-            padding: 8px 20px;
-            font-size: 0.9em;
-            background: #6c757d;
-        }
-
-        .select-controls button:hover {
-            box-shadow: 0 3px 15px rgba(108, 117, 125, 0.3);
-        }
-
-        .stop-btn {
-            background: #dc3545;
-            display: none;
-            margin-left: 10px;
-        }
-
-        .stop-btn.show {
-            display: inline-block;
-        }
-
-        .stop-btn:hover {
-            box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
-        }
-
-        .status.stopped {
-            background: #fff3cd;
-            color: #856404;
+            h1 {
+                font-size: 2em;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Ikon News Scraper</h1>
-        <p class="subtitle">Real-time Mongolian news scraping from ikon.mn</p>
-
-        <div class="info-box">
-            <p><strong>What this does:</strong> Scrapes news articles from multiple categories on ikon.mn and saves them to a JSON file.</p>
+        <div class="header">
+            <h1>Ikon News Scraper</h1>
+            <p class="subtitle">Real-time news aggregation from ikon.mn</p>
         </div>
 
-        <div class="category-selection">
-            <h3>Select News Categories:</h3>
-            <div class="category-grid" id="categoryGrid">
-                {% for category in categories %}
-                <div class="category-item">
-                    <input type="checkbox" id="cat_{{ category }}" value="{{ category }}" checked>
-                    <label for="cat_{{ category }}">{{ category.replace('_', ' ') }}</label>
+        <div class="content">
+            <div class="section">
+                <div class="section-title">Select Categories</div>
+                <div class="category-selection">
+                    <div class="category-grid" id="categoryGrid">
+                        {% for category in categories %}
+                        <div class="category-item">
+                            <input type="checkbox" id="cat_{{ category }}" value="{{ category }}" checked>
+                            <label for="cat_{{ category }}">{{ category.replace('_', ' ') }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="select-controls">
+                        <button onclick="selectAll()">Select All</button>
+                        <button onclick="deselectAll()">Deselect All</button>
+                    </div>
                 </div>
-                {% endfor %}
             </div>
-            <div class="select-controls">
-                <button onclick="selectAll()">Select All</button>
-                <button onclick="deselectAll()">Deselect All</button>
+
+            <div class="section">
+                <div class="section-title">Controls</div>
+                <div class="controls">
+                    <span id="status" class="status-badge idle">Idle</span>
+                    <button id="startBtn" class="btn-primary" onclick="startScraper()">
+                        Start Scraping
+                        <span id="spinner" class="spinner"></span>
+                    </button>
+                    <button id="stopBtn" class="btn-danger" onclick="stopScraper()">
+                        Stop Scraping
+                    </button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Console Output</div>
+                <div class="output-container" id="output">
+                    <div class="output-line">Ready to start scraping...</div>
+                </div>
+            </div>
+
+            <div id="downloadSection" class="download-section">
+                <h3>✓ Scraping Complete</h3>
+                <p>Your data has been successfully scraped and saved to JSON</p>
+                <button class="btn-success" id="downloadBtn" onclick="downloadFile()">
+                    Download JSON File
+                </button>
             </div>
         </div>
 
-        <div class="button-container">
-            <span id="status" class="status idle">Idle</span>
-            <br><br>
-            <button id="startBtn" onclick="startScraper()">
-                Start Scraping
-                <span id="spinner" class="spinner"></span>
-            </button>
-            <button id="stopBtn" class="stop-btn" onclick="stopScraper()">
-                Stop Scraping
-            </button>
-        </div>
-
-        <div class="output-container" id="output">
-            <div class="output-line">Ready to start scraping...</div>
-        </div>
-
-        <div id="downloadSection" class="download-section">
-            <h3>Scraping Complete!</h3>
-            <p>Your data has been successfully scraped and saved.</p>
-            <button class="download-btn" id="downloadBtn" onclick="downloadFile()">
-                Download JSON File
-            </button>
+        <div class="footer">
+            Created by <a href="https://www.telmuun.com" target="_blank" rel="noopener noreferrer">Telmuun</a>
         </div>
     </div>
 
@@ -295,7 +429,7 @@
 
         function updateStatus(status, text) {
             const statusEl = document.getElementById('status');
-            statusEl.className = `status ${status}`;
+            statusEl.className = `status-badge ${status}`;
             statusEl.textContent = text;
         }
 
@@ -330,7 +464,6 @@
             const output = document.getElementById('output');
             const downloadSection = document.getElementById('downloadSection');
 
-            // Get selected categories
             const selectedCategories = getSelectedCategories();
 
             if (selectedCategories.length === 0) {
@@ -338,17 +471,14 @@
                 return;
             }
 
-            // Clear previous output
             output.innerHTML = '';
             downloadSection.classList.remove('show');
 
-            // Disable start button, enable stop button
             startBtn.disabled = true;
             stopBtn.classList.add('show');
             spinner.classList.add('show');
-            updateStatus('running', 'Running...');
+            updateStatus('running', 'Running');
 
-            // Start the scraper
             fetch('/start', {
                 method: 'POST',
                 headers: {
@@ -369,7 +499,6 @@
 
                 addOutput('Scraper started successfully!');
 
-                // Start listening to the stream
                 eventSource = new EventSource('/stream');
 
                 eventSource.onmessage = function(event) {
@@ -411,7 +540,7 @@
 
             addOutput('Stopping scraper...');
             stopBtn.disabled = true;
-            updateStatus('stopped', 'Stopping...');
+            updateStatus('stopped', 'Stopping');
 
             fetch('/stop', {
                 method: 'POST'
