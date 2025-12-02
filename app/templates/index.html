@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ikon News Scraper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+
+        .button-container {
+            margin-bottom: 30px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .output-container {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #00ff00;
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+
+        .output-line {
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+
+        .download-section {
+            display: none;
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+        }
+
+        .download-section.show {
+            display: block;
+        }
+
+        .download-btn {
+            background: #28a745;
+            margin-top: 10px;
+        }
+
+        .download-btn:hover {
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .status.idle {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .status.running {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .spinner.show {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-box p {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .category-selection {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .category-selection h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .category-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .category-item label {
+            cursor: pointer;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .select-controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .select-controls button {
+            padding: 8px 20px;
+            font-size: 0.9em;
+            background: #6c757d;
+        }
+
+        .select-controls button:hover {
+            box-shadow: 0 3px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        .stop-btn {
+            background: #dc3545;
+            display: none;
+            margin-left: 10px;
+        }
+
+        .stop-btn.show {
+            display: inline-block;
+        }
+
+        .stop-btn:hover {
+            box-shadow: 0 5px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .status.stopped {
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ikon News Scraper</h1>
+        <p class="subtitle">Real-time Mongolian news scraping from ikon.mn</p>
+
+        <div class="info-box">
+            <p><strong>What this does:</strong> Scrapes news articles from multiple categories on ikon.mn and saves them to a JSON file.</p>
+        </div>
+
+        <div class="category-selection">
+            <h3>Select News Categories:</h3>
+            <div class="category-grid" id="categoryGrid">
+                {% for category in categories %}
+                <div class="category-item">
+                    <input type="checkbox" id="cat_{{ category }}" value="{{ category }}" checked>
+                    <label for="cat_{{ category }}">{{ category.replace('_', ' ') }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="select-controls">
+                <button onclick="selectAll()">Select All</button>
+                <button onclick="deselectAll()">Deselect All</button>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <span id="status" class="status idle">Idle</span>
+            <br><br>
+            <button id="startBtn" onclick="startScraper()">
+                Start Scraping
+                <span id="spinner" class="spinner"></span>
+            </button>
+            <button id="stopBtn" class="stop-btn" onclick="stopScraper()">
+                Stop Scraping
+            </button>
+        </div>
+
+        <div class="output-container" id="output">
+            <div class="output-line">Ready to start scraping...</div>
+        </div>
+
+        <div id="downloadSection" class="download-section">
+            <h3>Scraping Complete!</h3>
+            <p>Your data has been successfully scraped and saved.</p>
+            <button class="download-btn" id="downloadBtn" onclick="downloadFile()">
+                Download JSON File
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let eventSource = null;
+        let currentFile = null;
+
+        function updateStatus(status, text) {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${status}`;
+            statusEl.textContent = text;
+        }
+
+        function addOutput(message) {
+            const output = document.getElementById('output');
+            const line = document.createElement('div');
+            line.className = 'output-line';
+            line.textContent = message;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('.category-item input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = true);
+        }
+
+        function deselectAll() {
+            const checkboxes = document.querySelectorAll('.category-item input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+        }
+
+        function getSelectedCategories() {
+            const checkboxes = document.querySelectorAll('.category-item input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        function startScraper() {
+            const startBtn = document.getElementById('startBtn');
+            const stopBtn = document.getElementById('stopBtn');
+            const spinner = document.getElementById('spinner');
+            const output = document.getElementById('output');
+            const downloadSection = document.getElementById('downloadSection');
+
+            // Get selected categories
+            const selectedCategories = getSelectedCategories();
+
+            if (selectedCategories.length === 0) {
+                addOutput('Error: Please select at least one category!');
+                return;
+            }
+
+            // Clear previous output
+            output.innerHTML = '';
+            downloadSection.classList.remove('show');
+
+            // Disable start button, enable stop button
+            startBtn.disabled = true;
+            stopBtn.classList.add('show');
+            spinner.classList.add('show');
+            updateStatus('running', 'Running...');
+
+            // Start the scraper
+            fetch('/start', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ categories: selectedCategories })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'error') {
+                    addOutput(`Error: ${data.message}`);
+                    startBtn.disabled = false;
+                    stopBtn.classList.remove('show');
+                    spinner.classList.remove('show');
+                    updateStatus('idle', 'Idle');
+                    return;
+                }
+
+                addOutput('Scraper started successfully!');
+
+                // Start listening to the stream
+                eventSource = new EventSource('/stream');
+
+                eventSource.onmessage = function(event) {
+                    const data = JSON.parse(event.data);
+
+                    if (data.message === 'DONE') {
+                        currentFile = data.file;
+                        addOutput('All done! You can now download the file.');
+                        downloadSection.classList.add('show');
+                        eventSource.close();
+                        startBtn.disabled = false;
+                        stopBtn.classList.remove('show');
+                        spinner.classList.remove('show');
+                        updateStatus('completed', 'Completed');
+                    } else {
+                        addOutput(data.message);
+                    }
+                };
+
+                eventSource.onerror = function() {
+                    eventSource.close();
+                    startBtn.disabled = false;
+                    stopBtn.classList.remove('show');
+                    spinner.classList.remove('show');
+                    updateStatus('idle', 'Idle');
+                };
+            })
+            .catch(error => {
+                addOutput(`Error: ${error.message}`);
+                startBtn.disabled = false;
+                stopBtn.classList.remove('show');
+                spinner.classList.remove('show');
+                updateStatus('idle', 'Idle');
+            });
+        }
+
+        function stopScraper() {
+            const stopBtn = document.getElementById('stopBtn');
+
+            addOutput('Stopping scraper...');
+            stopBtn.disabled = true;
+            updateStatus('stopped', 'Stopping...');
+
+            fetch('/stop', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    addOutput('Stop request sent. Waiting for current operation to finish...');
+                }
+            })
+            .catch(error => {
+                addOutput(`Error: ${error.message}`);
+            });
+        }
+
+        function downloadFile() {
+            if (currentFile) {
+                window.location.href = `/download/${currentFile}`;
+            }
+        }
+    </script>
+</body>
+</html>

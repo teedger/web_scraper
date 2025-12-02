@@ -14,8 +14,8 @@ car_list = []
 today = datetime.date.today().strftime("%Y%m%d")
 
 # File names
-source_file_name = f"car_list_{today}.csv"
-destination_file_name = f"car_info_{today}.csv"
+source_file_name = f"car_list_20250215.csv"
+destination_file_name = f"car_info_202502.csv"
 checkpoint_file = "car_checkpoint.txt"  # File to track the last processed ad_id
 
 # Field names for csv
