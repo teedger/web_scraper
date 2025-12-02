@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Credentials and sensitive files
+*.json
+!package.json
+!tsconfig.json
+
+# Data files (CSV, generated files)
+*.csv
+*.ndjson
+
+# OS files
+.DS_Store
+Thumbs.db
