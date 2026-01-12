@@ -1,0 +1,17 @@
+# Ignore everything except the app folder
+/*
+!/app/
+!/Procfile
+!/requirements.txt
+
+# Also ignore data files in app folder
+app/*.csv
+app/*.json
+app/*.ndjson
+app/__pycache__/
+app/.DS_Store
+app/DEPLOYMENT.md
+app/DEPLOY_CHECKLIST.md
+app/PORTFOLIO.md
+app/QUICKSTART.md
+app/README.md

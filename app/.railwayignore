@@ -1,0 +1,12 @@
+*.csv
+*.json
+*.ndjson
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+.idea/
+README.md
+QUICKSTART.md
+PORTFOLIO.md
+DEPLOYMENT.md
